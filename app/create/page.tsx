@@ -17,22 +17,6 @@ export default function CreateCollectiblePage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  // Optional: handle image upload to Supabase Storage
-  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${Date.now()}.${fileExt}`;
-    const { data, error } = await supabase.storage
-      .from('collectibles')
-      .upload(fileName, file);
-    if (error) {
-      setError('Image upload failed');
-      return;
-    }
-    const url = supabase.storage.from('collectibles').getPublicUrl(fileName).data.publicUrl;
-    setImageUrl(url);
-  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

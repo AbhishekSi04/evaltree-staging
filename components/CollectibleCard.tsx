@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { loadStripe } from "@stripe/stripe-js";
+// import { loadStripe } from "@stripe/stripe-js";
 
 type Props = {
   id: string;
