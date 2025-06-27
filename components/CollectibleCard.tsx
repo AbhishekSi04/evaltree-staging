@@ -1,5 +1,6 @@
 import { FC } from "react";
 // import { loadStripe } from "@stripe/stripe-js";
+import { useUser } from '@/components/UserProvider';
 
 type Props = {
   id: string;
@@ -18,11 +19,13 @@ export const CollectibleCard: FC<Props> = ({
   image_url,
   created_at,
 }) => {
+  const { user } = useUser();
+
   const handleBuy = async () => {
     const res = await fetch('/api/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id, title, price }),
+      body: JSON.stringify({ id, title, price, user_id: user?.id }),
     });
     const data = await res.json();
     if (data.url) {

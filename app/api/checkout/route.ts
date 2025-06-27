@@ -4,7 +4,7 @@ import Stripe from 'stripe';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function POST(req: NextRequest) {
-  const { title, price, id } = await req.json();
+  const { title, price, id, user_id } = await req.json();
 
   // Stripe expects price in cents
   const priceInCents = Math.round(Number(price) * 100);
@@ -29,6 +29,7 @@ export async function POST(req: NextRequest) {
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/marketplace?canceled=1`,
       metadata: {
         collectible_id: id,
+        user_id: user_id,
       },
     });
 
