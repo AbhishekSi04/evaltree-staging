@@ -29,7 +29,12 @@ export default function MyCollectiblesPage() {
         .eq('user_id', user?.id);
 
       if (purchases && purchases.length > 0) {
-        const ids = purchases.map((p: any) => p.collectible_id);
+        const ids = purchases.map((p: unknown) => {
+            if (typeof p === 'object' && p !== null && 'collectible_id' in p) {
+              return (p as { collectible_id: string }).collectible_id;
+            }
+            return null;
+          });
         const { data: collectiblesData } = await supabase
           .from('collectibles')
           .select('*')
@@ -57,8 +62,8 @@ export default function MyCollectiblesPage() {
           <div className="text-gray-400">You have no collectibles yet.</div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {collectibles.map((item: any) => (
-              <CollectibleCard key={item.id} {...item} />
+            {collectibles.map((item: Collectible) => (
+               <CollectibleCard key={item.id} {...item} />
             ))}
           </div>
         )}
