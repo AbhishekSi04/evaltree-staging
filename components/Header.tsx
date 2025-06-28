@@ -25,6 +25,7 @@ export default function Header() {
           <Link href="/marketplace" className="hover:text-blue-400 transition">Marketplace</Link>
           <Link href="/trading" className="hover:text-blue-400 transition">Trading</Link>
           <Link href="/create" className="hover:text-blue-400 transition">Create</Link>
+          <Link href="/my-collectibles" className="hover:text-blue-400 transition">My Assets</Link>
         </nav>
         {/* Auth/User section */}
         {!user ? (

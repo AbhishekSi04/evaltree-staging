@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { useUser } from '@/components/UserProvider';
-import { CollectibleCard } from '@/components/CollectibleCard';
+import { OwnedCollectibleCard } from '@/components/OwnedCollectibleCard';
 
 type Collectible = {
     id: string;
@@ -20,31 +20,27 @@ export default function MyCollectiblesPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (user==null) return;
+    if (user?.id == null) return;
+    
     async function fetchMyCollectibles() {
       setLoading(true);
-      const { data: purchases } = await supabase
+      
+      // Try different approaches to find purchases
+      const { data: purchases, error: purchasesError } = await supabase
         .from('purchases')
         .select('collectible_id')
         .eq('user_id', user?.id);
-
-      if (purchases && purchases.length > 0) {
-        const ids = purchases.map((p: unknown) => {
-            if (typeof p === 'object' && p !== null && 'collectible_id' in p) {
-              return (p as { collectible_id: string }).collectible_id;
-            }
-            return null;
-          });
-        const { data: collectiblesData } = await supabase
-          .from('collectibles')
-          .select('*')
-          .in('id', ids);
-        setCollectibles(collectiblesData || []);
-      } else {
-        setCollectibles([]);
+      
+      
+      if (purchasesError) {
+        console.error('Error fetching purchases:', purchasesError);
+        setLoading(false);
+        return;
       }
+
       setLoading(false);
     }
+    
     fetchMyCollectibles();
   }, [user]);
 
@@ -56,6 +52,7 @@ export default function MyCollectiblesPage() {
     <div className="min-h-screen bg-[#181c2a] py-12 px-4">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-bold text-white mb-4">My Collectibles</h1>
+        
         {loading ? (
           <div className="text-white">Loading...</div>
         ) : collectibles.length === 0 ? (
@@ -63,7 +60,7 @@ export default function MyCollectiblesPage() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {collectibles.map((item: Collectible) => (
-               <CollectibleCard key={item.id} {...item} />
+               <OwnedCollectibleCard key={item.id} {...item} />
             ))}
           </div>
         )}
