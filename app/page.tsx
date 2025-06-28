@@ -9,6 +9,7 @@ import CallToAction from '@/components/CallToAction';
 import WhyChooseUs from '@/components/WhyChooseUs';
 import Footer from '@/components/Footer';
 import SuccessHandler from '@/components/SuccessHandler';
+import RaffleWidget from '@/components/RaffleWidget';
 
 export default function Home() {
   const { user, loading } = useUser();
@@ -45,6 +46,7 @@ export default function Home() {
       <CallToAction />
       <WhyChooseUs />
       <Footer />
+      <RaffleWidget />
     </div>
   );
 }
