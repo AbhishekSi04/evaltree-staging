@@ -10,7 +10,6 @@ type Props = {
 };
 
 export const OwnedCollectibleCard: FC<Props> = ({
-  id,
   title,
   description,
   price,

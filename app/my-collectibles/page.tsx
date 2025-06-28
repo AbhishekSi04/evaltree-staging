@@ -20,27 +20,29 @@ export default function MyCollectiblesPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (user?.id == null) return;
-    
+    if (!user || !user.id) return;
     async function fetchMyCollectibles() {
       setLoading(true);
-      
-      // Try different approaches to find purchases
       const { data: purchases, error: purchasesError } = await supabase
         .from('purchases')
         .select('collectible_id')
         .eq('user_id', user?.id);
-      
-      
       if (purchasesError) {
-        console.error('Error fetching purchases:', purchasesError);
         setLoading(false);
         return;
       }
-
+      if (purchases && purchases.length > 0) {
+        const ids = purchases.map((p: any) => p.collectible_id).filter(Boolean);
+        const { data: collectiblesData } = await supabase
+          .from('collectibles')
+          .select('*')
+          .in('id', ids);
+        setCollectibles(collectiblesData || []);
+      } else {
+        setCollectibles([]);
+      }
       setLoading(false);
     }
-    
     fetchMyCollectibles();
   }, [user]);
 
@@ -49,9 +51,10 @@ export default function MyCollectiblesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#181c2a] py-12 px-4">
+    <div className="min-h-screen bg-[#181c2a] py-12 px-5">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold text-white mb-4">My Collectibles</h1>
+        <h1 className="text-4xl font-bold text-white mb-4 pb-4 ">My Collectibles</h1>
+        
         
         {loading ? (
           <div className="text-white">Loading...</div>
