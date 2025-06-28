@@ -14,6 +14,11 @@ type Collectible = {
     created_at: string;
   };
 
+  type Purchase = {
+    collectible_id?: string | null;
+    // ... other fields
+  };
+
 export default function MyCollectiblesPage() {
   const { user } = useUser();
   const [collectibles, setCollectibles] = useState<Collectible[]>([]);
@@ -32,7 +37,9 @@ export default function MyCollectiblesPage() {
         return;
       }
       if (purchases && purchases.length > 0) {
-        const ids = purchases.map((p: any) => p.collectible_id).filter(Boolean);
+        const ids = purchases
+        .map((p: Purchase) => p.collectible_id)
+        .filter((id): id is string => Boolean(id));
         const { data: collectiblesData } = await supabase
           .from('collectibles')
           .select('*')
