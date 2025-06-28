@@ -43,9 +43,6 @@ export default function Footer() {
             <li>
               <Link href="/raffles" className="text-gray-400 hover:text-blue-400 transition">Raffles</Link>
             </li>
-            <li>
-              <Link href="/analytics" className="text-gray-400 hover:text-blue-400 transition">Analytics</Link>
-            </li>
           </ul>
         </div>
         {/* Right: Support Links */}
